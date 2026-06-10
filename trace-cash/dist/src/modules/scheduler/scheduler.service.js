@@ -9,13 +9,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var SchedulerService_1;
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SchedulerService = void 0;
 const common_1 = require("@nestjs/common");
 const schedule_1 = require("@nestjs/schedule");
 const date_fns_1 = require("date-fns");
-const prisma_service_1 = require("../common/prisma/prisma.service");
+const prisma_service_1 = require("../../common/prisma/prisma.service");
 let SchedulerService = SchedulerService_1 = class SchedulerService {
     prisma;
     logger = new common_1.Logger(SchedulerService_1.name);
@@ -71,6 +70,6 @@ __decorate([
 ], SchedulerService.prototype, "generateInstances", null);
 exports.SchedulerService = SchedulerService = SchedulerService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], SchedulerService);
 //# sourceMappingURL=scheduler.service.js.map

@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { CreateRecurringExpenseDto } from '../dto/create-recurring-expense.dto';
 import { UpdateRecurringExpenseDto } from '../dto/update-recurring-expense.dto';
 

@@ -10,12 +10,12 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const categories_module_1 = require("./categories/categories.module");
+const categories_module_1 = require("./modules/categories/categories.module");
 const common_module_1 = require("./common/common.module");
-const recurring_expenses_module_1 = require("./recurring-expenses/recurring-expenses.module");
-const scheduler_module_1 = require("./scheduler/scheduler.module");
+const recurring_expenses_module_1 = require("./modules/recurring-expenses/recurring-expenses.module");
+const scheduler_module_1 = require("./modules/scheduler/scheduler.module");
 const schedule_1 = require("@nestjs/schedule");
-const expense_instances_module_1 = require("./expense-instances/expense-instances.module");
+const expense_instances_module_1 = require("./modules/expense-instances/expense-instances.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;

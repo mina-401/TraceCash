@@ -1,4 +1,4 @@
-import { PrismaService } from '../common/prisma/prisma.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
 export declare class SchedulerService {
     private prisma;
     private readonly logger;
