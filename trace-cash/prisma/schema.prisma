@@ -1,0 +1,99 @@
+// 고정지출 관리 플랫폼 — Prisma schema (MySQL)
+// 핵심 엔티티: User / Category / RecurringExpense / ExpenseInstance
+
+generator client {
+  provider = "prisma-client-js"
+  
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// 반복 주기: 월간 / 연간 / 주간
+enum Frequency {
+  MONTHLY
+  YEARLY
+  WEEKLY
+}
+
+// 인스턴스 상태: 예정 / 결제완료 / 건너뜀
+enum InstanceStatus {
+  PENDING
+  PAID
+  SKIPPED
+}
+
+// ─────────────────────────────────────────────
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  categories        Category[]
+  recurringExpenses RecurringExpense[]
+
+  @@map("users")
+}
+
+// ─────────────────────────────────────────────
+model Category {
+  id          String  @id @default(cuid())
+  userId      String  @map("user_id")
+  name        String
+  domain      String  // 주거 / 통신 / 건강 / 엔터 / 금융 ...
+  isEssential Boolean @default(false) @map("is_essential") // 필수도 축
+
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recurringExpenses RecurringExpense[]
+
+  @@index([userId])
+  @@map("categories")
+}
+
+// ─────────────────────────────────────────────
+// 반복 규칙(템플릿) — "넷플릭스를 매달 25일에 결제한다"
+model RecurringExpense {
+  id         String    @id @default(cuid())
+  userId     String    @map("user_id")
+  categoryId String?   @map("category_id")
+  name       String
+  amount     Int       // 원 단위 정수 저장 (부동소수점 회피)
+  frequency  Frequency @default(MONTHLY)
+  interval   Int       @default(1) // 2 = 격월/격주
+  dayOfMonth Int?      @map("day_of_month") // 매달 며칠 (월간일 때)
+  startDate  DateTime  @map("start_date") @db.Date
+  endDate    DateTime? @map("end_date") @db.Date // null = 무기한
+  isActive   Boolean   @default(true) @map("is_active")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category  Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  instances ExpenseInstance[]
+
+  @@index([userId])
+  @@index([isActive])
+  @@map("recurring_expenses")
+}
+
+// ─────────────────────────────────────────────
+// 지출 발생(실제 건) — 스케줄러가 규칙으로부터 찍어냄
+model ExpenseInstance {
+  id          String         @id @default(cuid())
+  recurringId String         @map("recurring_id")
+  amount      Int            // 생성 시점의 금액을 복사 보관 (과거 보존 + 인상 감지)
+  dueDate     DateTime       @map("due_date") @db.Date
+  status      InstanceStatus @default(PENDING)
+  createdAt   DateTime       @default(now()) @map("created_at")
+
+  recurring RecurringExpense @relation(fields: [recurringId], references: [id], onDelete: Cascade)
+
+  // 멱등성의 핵심: 같은 규칙 + 같은 날짜는 단 하나만 존재
+  @@unique([recurringId, dueDate])
+  @@index([dueDate])
+  @@index([status])
+  @@map("expense_instances")
+}
