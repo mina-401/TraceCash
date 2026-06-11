@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
-import { addMonths, addYears, addWeeks, setDate } from 'date-fns';
+import { addMonths, addYears, addWeeks, setDate, endOfMonth } from 'date-fns';
 import { RecurringExpense } from '@prisma/client';
 import { PrismaService } from '../../common/prisma/prisma.service';
 
@@ -10,16 +10,22 @@ export class SchedulerService {
 
   constructor(private prisma: PrismaService) {}
 
-  // 주어진 날짜(after) 이후의 다음 결제일을 계산
-  private getNextDueDate(rule: RecurringExpense, after: Date): Date {
+  // 다음 결제일로 한 주기 전진
+  private advance(rule: RecurringExpense, date: Date): Date {
+    if (rule.frequency === 'MONTHLY') return addMonths(date, rule.interval);
+    if (rule.frequency === 'YEARLY') return addYears(date, rule.interval);
+    return addWeeks(date, rule.interval);
+  }
+
+  // 규칙의 첫 번째 결제일 계산
+  private getFirstDueDate(rule: RecurringExpense): Date {
     let due = new Date(rule.startDate);
     if (rule.frequency === 'MONTHLY' && rule.dayOfMonth) {
       due = setDate(due, rule.dayOfMonth);
-    }
-    while (due <= after) {
-      if (rule.frequency === 'MONTHLY') due = addMonths(due, rule.interval);
-      else if (rule.frequency === 'YEARLY') due = addYears(due, rule.interval);
-      else due = addWeeks(due, rule.interval); // WEEKLY
+      // startDate보다 앞으로 당겨졌으면 한 달 전진
+      if (due < new Date(rule.startDate)) {
+        due = this.advance(rule, due);
+      }
     }
     return due;
   }
@@ -27,27 +33,34 @@ export class SchedulerService {
   @Interval(10000)
   async generateInstances() {
     const now = new Date();
+    // 다음 달 말까지 미리 생성 (이번 달 + 다음 달 항상 보임)
+    const horizon = endOfMonth(addMonths(now, 1));
+
     const rules = await this.prisma.recurringExpense.findMany({
       where: { isActive: true },
     });
 
     for (const rule of rules) {
-      const dueDate = this.getNextDueDate(rule, now);
-      if (rule.endDate && dueDate > rule.endDate) continue;
+      let due = this.getFirstDueDate(rule);
 
-      await this.prisma.expenseInstance.upsert({
-        where: {
-          recurringId_dueDate: { recurringId: rule.id, dueDate },
-        },
-        update: {},
-        create: {
-          recurringId: rule.id,
-          amount: rule.amount,
-          dueDate,
-          status: 'PENDING',
-        },
-      });
+      while (due <= horizon) {
+        if (rule.endDate && due > new Date(rule.endDate)) break;
+
+        await this.prisma.expenseInstance.upsert({
+          where: { recurringId_dueDate: { recurringId: rule.id, dueDate: due } },
+          update: {},
+          create: {
+            recurringId: rule.id,
+            amount: rule.amount,
+            dueDate: due,
+            status: 'PENDING',
+          },
+        });
+
+        due = this.advance(rule, due);
+      }
     }
-    this.logger.log(`인스턴스 생성 완료: 규칙 ${rules.length}개 체크`);
+
+    this.logger.log(`인스턴스 생성 완료: 규칙 ${rules.length}개 / ${horizon.toISOString().split('T')[0]}까지`);
   }
 }

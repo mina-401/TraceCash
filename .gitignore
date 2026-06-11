@@ -1,24 +1,31 @@
-# Nestjs specific
-/dist
-/node_modules
-/build
-/tmp
+# 의존성
+node_modules/
 
-# Logs
-logs
+# 빌드 산출물
+dist/
+build/
+
+# 환경 변수
+.env
+.env.*
+!.env.example
+
+# 로그
+logs/
 *.log
 npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
 
-# dotenv environment variable files
-.env
-.env.development
-.env.test
-.env.production
-
-# temp directory
+# 임시
 .temp
 .tmp
+
+# Claude 내부 파일
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 프론트엔드
+frontend/node_modules/
+frontend/dist/

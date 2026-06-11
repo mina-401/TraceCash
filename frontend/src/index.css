@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: Inter, -apple-system, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
+    color: rgba(0, 0, 0, 0.95);
+    background-color: #ffffff;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  :focus-visible {
+    outline: 2px solid #097fe8;
+    outline-offset: 2px;
+  }
+}

@@ -13,12 +13,11 @@ export class CategoriesService {
   }
 
   findAll(userId: string) {
-    return this.prisma.category.findMany(
-      {
-        where: { userId },
-      }
-
-    );
+    return this.prisma.category.findMany({
+      where: {
+        OR: [{ userId: null }, { userId }],
+      },
+    });
   }
 
   async findOne(id: string) {
