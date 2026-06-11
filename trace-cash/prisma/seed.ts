@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const DEFAULT_CATEGORIES = [
+const commonCategories = [
   { name: '주거', domain: 'housing', isEssential: true },
   { name: '통신', domain: 'telecom', isEssential: true },
   { name: '금융·보험', domain: 'finance', isEssential: true },
@@ -14,21 +14,13 @@ const DEFAULT_CATEGORIES = [
 ];
 
 async function main() {
-  const user = await prisma.user.upsert({
-    where: { email: 'test@test.com' },
-    update: {},
-    create: { email: 'test@test.com', passwordHash: 'temp' },
-  });
+  // 공용 카테고리만 리셋 (userId가 null인 것)
+  await prisma.category.deleteMany({ where: { userId: null } });
 
-  await prisma.category.deleteMany({ where: { userId: user.id } });
+  // 공용 카테고리 생성 (userId 없이 = null = 공용)
+  await prisma.category.createMany({ data: commonCategories });
 
-  for (const cat of DEFAULT_CATEGORIES) {
-    await prisma.category.create({
-      data: { ...cat, userId: user.id },
-    });
-  }
-
-  console.log(`Seed 완료: 카테고리 ${DEFAULT_CATEGORIES.length}개`);
+  console.log(`Seed 완료: 공용 카테고리 ${commonCategories.length}개`);
 }
 
 main()

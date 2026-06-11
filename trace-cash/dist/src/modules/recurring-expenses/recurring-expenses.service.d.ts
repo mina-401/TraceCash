@@ -8,7 +8,6 @@ export declare class RecurringExpensesService {
         userId: string;
         name: string;
         id: string;
-        createdAt: Date;
         categoryId: string | null;
         amount: number;
         frequency: import("@prisma/client").$Enums.Frequency;
@@ -17,12 +16,12 @@ export declare class RecurringExpensesService {
         startDate: Date;
         endDate: Date | null;
         isActive: boolean;
+        createdAt: Date;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
     findAll(userId: string): import("@prisma/client").Prisma.PrismaPromise<{
         userId: string;
         name: string;
         id: string;
-        createdAt: Date;
         categoryId: string | null;
         amount: number;
         frequency: import("@prisma/client").$Enums.Frequency;
@@ -31,12 +30,12 @@ export declare class RecurringExpensesService {
         startDate: Date;
         endDate: Date | null;
         isActive: boolean;
+        createdAt: Date;
     }[]>;
     findOne(id: string): Promise<{
         userId: string;
         name: string;
         id: string;
-        createdAt: Date;
         categoryId: string | null;
         amount: number;
         frequency: import("@prisma/client").$Enums.Frequency;
@@ -45,12 +44,12 @@ export declare class RecurringExpensesService {
         startDate: Date;
         endDate: Date | null;
         isActive: boolean;
+        createdAt: Date;
     }>;
     update(id: string, dto: UpdateRecurringExpenseDto): import("@prisma/client").Prisma.Prisma__RecurringExpenseClient<{
         userId: string;
         name: string;
         id: string;
-        createdAt: Date;
         categoryId: string | null;
         amount: number;
         frequency: import("@prisma/client").$Enums.Frequency;
@@ -59,12 +58,12 @@ export declare class RecurringExpensesService {
         startDate: Date;
         endDate: Date | null;
         isActive: boolean;
+        createdAt: Date;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
     remove(id: string): import("@prisma/client").Prisma.Prisma__RecurringExpenseClient<{
         userId: string;
         name: string;
         id: string;
-        createdAt: Date;
         categoryId: string | null;
         amount: number;
         frequency: import("@prisma/client").$Enums.Frequency;
@@ -73,5 +72,6 @@ export declare class RecurringExpensesService {
         startDate: Date;
         endDate: Date | null;
         isActive: boolean;
+        createdAt: Date;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
 }

@@ -5,35 +5,35 @@ export declare class CategoriesService {
     private prisma;
     constructor(prisma: PrismaService);
     create(userId: string, createCategoryDto: CreateCategoryDto): import("@prisma/client").Prisma.Prisma__CategoryClient<{
-        userId: string;
+        userId: string | null;
         name: string;
         domain: string;
         isEssential: boolean;
         id: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
     findAll(userId: string): import("@prisma/client").Prisma.PrismaPromise<{
-        userId: string;
+        userId: string | null;
         name: string;
         domain: string;
         isEssential: boolean;
         id: string;
     }[]>;
     findOne(id: string): Promise<{
-        userId: string;
+        userId: string | null;
         name: string;
         domain: string;
         isEssential: boolean;
         id: string;
     }>;
     update(id: string, updateCategoryDto: UpdateCategoryDto): import("@prisma/client").Prisma.Prisma__CategoryClient<{
-        userId: string;
+        userId: string | null;
         name: string;
         domain: string;
         isEssential: boolean;
         id: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
     remove(id: string): import("@prisma/client").Prisma.Prisma__CategoryClient<{
-        userId: string;
+        userId: string | null;
         name: string;
         domain: string;
         isEssential: boolean;

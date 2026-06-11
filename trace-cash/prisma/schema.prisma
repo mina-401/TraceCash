@@ -41,19 +41,14 @@ model User {
 
 // ─────────────────────────────────────────────
 model Category {
-  id          String  @id @default(cuid())
-  userId      String  @map("user_id")
+  id          String   @id @default(cuid())
+  userId      String?                                                          // ← ? 추가
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)  // ← User? 로
   name        String
-  domain      String  // 주거 / 통신 / 건강 / 엔터 / 금융 ...
-  isEssential Boolean @default(false) @map("is_essential") // 필수도 축
-
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  domain      String
+  isEssential Boolean  @default(false)
   recurringExpenses RecurringExpense[]
-
-  @@index([userId])
-  @@map("categories")
 }
-
 // ─────────────────────────────────────────────
 // 반복 규칙(템플릿) — "넷플릭스를 매달 25일에 결제한다"
 model RecurringExpense {
