@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { CreateExpenseInstanceDto } from './dto/create-expense-instance.dto';
-import { UpdateExpenseInstanceDto } from './dto/update-expense-instance.dto';
+import { PrismaService } from '../../common/prisma/prisma.service';
 
 @Injectable()
 export class ExpenseInstancesService {
-  create(createExpenseInstanceDto: CreateExpenseInstanceDto) {
-    return 'This action adds a new expenseInstance';
+  constructor(private prisma: PrismaService) {}
+
+  findByPeriod(userId: string, from: string, to: string) {
+    return this.prisma.expenseInstance.findMany({
+      where: {
+        dueDate: { gte: new Date(from), lte: new Date(to) },
+        recurring: { userId },
+      },
+      include: { recurring: true },
+      orderBy: { dueDate: 'asc' },
+    });
   }
 
-  findAll() {
-    return `This action returns all expenseInstances`;
+  markPaid(id: string) {
+    return this.prisma.expenseInstance.update({
+      where: { id },
+      data: { status: 'PAID' },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} expenseInstance`;
-  }
-
-  update(id: number, updateExpenseInstanceDto: UpdateExpenseInstanceDto) {
-    return `This action updates a #${id} expenseInstance`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} expenseInstance`;
+  skip(id: string) {
+    return this.prisma.expenseInstance.update({
+      where: { id },
+      data: { status: 'SKIPPED' },
+    });
   }
 }

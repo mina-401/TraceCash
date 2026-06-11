@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@nestjs/mapped-types": "*",
+    "bcrypt": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0"
+  }
+}

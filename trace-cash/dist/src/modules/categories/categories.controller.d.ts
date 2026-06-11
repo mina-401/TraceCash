@@ -4,14 +4,14 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export declare class CategoriesController {
     private readonly categoriesService;
     constructor(categoriesService: CategoriesService);
-    create(createCategoryDto: CreateCategoryDto): import("@prisma/client").Prisma.Prisma__CategoryClient<{
+    create(user: any, dto: CreateCategoryDto): import("@prisma/client").Prisma.Prisma__CategoryClient<{
         userId: string;
         name: string;
         domain: string;
         isEssential: boolean;
         id: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    findAll(): import("@prisma/client").Prisma.PrismaPromise<{
+    findAll(user: any): import("@prisma/client").Prisma.PrismaPromise<{
         userId: string;
         name: string;
         domain: string;
@@ -25,7 +25,7 @@ export declare class CategoriesController {
         isEssential: boolean;
         id: string;
     }>;
-    update(id: string, updateCategoryDto: UpdateCategoryDto): import("@prisma/client").Prisma.Prisma__CategoryClient<{
+    update(id: string, dto: UpdateCategoryDto): import("@prisma/client").Prisma.Prisma__CategoryClient<{
         userId: string;
         name: string;
         domain: string;

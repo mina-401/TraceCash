@@ -17,11 +17,13 @@ let CategoriesService = class CategoriesService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    create(createCategoryDto) {
-        return this.prisma.category.create({ data: createCategoryDto });
+    create(userId, createCategoryDto) {
+        return this.prisma.category.create({ data: { userId, ...createCategoryDto } });
     }
-    findAll() {
-        return this.prisma.category.findMany();
+    findAll(userId) {
+        return this.prisma.category.findMany({
+            where: { userId },
+        });
     }
     async findOne(id) {
         const category = await this.prisma.category.findUnique({ where: { id } });

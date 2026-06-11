@@ -12,23 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateCategoryDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateCategoryDto {
-    userId;
     name;
     domain;
     isEssential;
-    constructor(userId, name, domain, isEssential) {
-        this.userId = userId;
+    constructor(name, domain, isEssential) {
         this.name = name;
         this.domain = domain;
         this.isEssential = isEssential;
     }
 }
 exports.CreateCategoryDto = CreateCategoryDto;
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateCategoryDto.prototype, "userId", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),

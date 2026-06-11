@@ -1,34 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Patch, Param, Query, UseGuards } from '@nestjs/common';
 import { ExpenseInstancesService } from './expense-instances.service';
-import { CreateExpenseInstanceDto } from './dto/create-expense-instance.dto';
-import { UpdateExpenseInstanceDto } from './dto/update-expense-instance.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
+@UseGuards(JwtAuthGuard)
 @Controller('expense-instances')
 export class ExpenseInstancesController {
-  constructor(private readonly expenseInstancesService: ExpenseInstancesService) {}
-
-  @Post()
-  create(@Body() createExpenseInstanceDto: CreateExpenseInstanceDto) {
-    return this.expenseInstancesService.create(createExpenseInstanceDto);
-  }
+  constructor(private readonly service: ExpenseInstancesService) {}
 
   @Get()
-  findAll() {
-    return this.expenseInstancesService.findAll();
+  findByPeriod(
+    @CurrentUser() user,
+    @Query('from') from: string,
+    @Query('to') to: string,
+  ) {
+    return this.service.findByPeriod(user.userId, from, to);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.expenseInstancesService.findOne(+id);
+  @Patch(':id/pay')
+  markPaid(@Param('id') id: string) {
+    return this.service.markPaid(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExpenseInstanceDto: UpdateExpenseInstanceDto) {
-    return this.expenseInstancesService.update(+id, updateExpenseInstanceDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.expenseInstancesService.remove(+id);
+  @Patch(':id/skip')
+  skip(@Param('id') id: string) {
+    return this.service.skip(id);
   }
 }

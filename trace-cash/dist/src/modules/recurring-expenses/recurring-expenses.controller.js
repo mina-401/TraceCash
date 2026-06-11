@@ -17,39 +17,43 @@ const common_1 = require("@nestjs/common");
 const recurring_expenses_service_1 = require("./recurring-expenses.service");
 const create_recurring_expense_dto_1 = require("./dto/create-recurring-expense.dto");
 const update_recurring_expense_dto_1 = require("./dto/update-recurring-expense.dto");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const current_user_decorator_1 = require("../../common/decorators/current-user.decorator");
 let RecurringExpensesController = class RecurringExpensesController {
-    recurringExpensesService;
-    constructor(recurringExpensesService) {
-        this.recurringExpensesService = recurringExpensesService;
+    service;
+    constructor(service) {
+        this.service = service;
     }
-    create(createRecurringExpenseDto) {
-        return this.recurringExpensesService.create(createRecurringExpenseDto);
+    create(user, dto) {
+        return this.service.create(user.userId, dto);
     }
-    findAll() {
-        return this.recurringExpensesService.findAll();
+    findAll(user) {
+        return this.service.findAll(user.userId);
     }
     findOne(id) {
-        return this.recurringExpensesService.findOne(id);
+        return this.service.findOne(id);
     }
-    update(id, updateRecurringExpenseDto) {
-        return this.recurringExpensesService.update(id, updateRecurringExpenseDto);
+    update(id, dto) {
+        return this.service.update(id, dto);
     }
     remove(id) {
-        return this.recurringExpensesService.remove(id);
+        return this.service.remove(id);
     }
 };
 exports.RecurringExpensesController = RecurringExpensesController;
 __decorate([
     (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_recurring_expense_dto_1.CreateRecurringExpenseDto]),
+    __metadata("design:paramtypes", [Object, create_recurring_expense_dto_1.CreateRecurringExpenseDto]),
     __metadata("design:returntype", void 0)
 ], RecurringExpensesController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], RecurringExpensesController.prototype, "findAll", null);
 __decorate([
@@ -75,6 +79,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], RecurringExpensesController.prototype, "remove", null);
 exports.RecurringExpensesController = RecurringExpensesController = __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('recurring-expenses'),
     __metadata("design:paramtypes", [recurring_expenses_service_1.RecurringExpensesService])
 ], RecurringExpensesController);

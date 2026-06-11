@@ -13,7 +13,6 @@ exports.CreateRecurringExpenseDto = void 0;
 const class_validator_1 = require("class-validator");
 const client_1 = require("@prisma/client");
 class CreateRecurringExpenseDto {
-    userId;
     categoryId;
     name;
     amount;
@@ -22,8 +21,7 @@ class CreateRecurringExpenseDto {
     dayOfMonth;
     startDate;
     endDate;
-    constructor(userId, name, amount, frequency, startDate, categoryId, interval, dayOfMonth, endDate) {
-        this.userId = userId;
+    constructor(name, amount, frequency, startDate, categoryId, interval, dayOfMonth, endDate) {
         this.categoryId = categoryId;
         this.name = name;
         this.amount = amount;
@@ -35,11 +33,6 @@ class CreateRecurringExpenseDto {
     }
 }
 exports.CreateRecurringExpenseDto = CreateRecurringExpenseDto;
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateRecurringExpenseDto.prototype, "userId", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),

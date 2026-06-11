@@ -17,18 +17,23 @@ let RecurringExpensesService = class RecurringExpensesService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    create(dto) {
+    create(userId, dto) {
         const { startDate, endDate, ...rest } = dto;
         return this.prisma.recurringExpense.create({
             data: {
                 ...rest,
+                userId,
                 startDate: new Date(startDate),
                 endDate: endDate ? new Date(endDate) : null,
             },
         });
     }
-    findAll() {
-        return this.prisma.recurringExpense.findMany();
+    findAll(userId) {
+        return this.prisma.recurringExpense.findMany({
+            where: {
+                userId
+            }
+        });
     }
     async findOne(id) {
         const item = await this.prisma.recurringExpense.findUnique({ where: { id } });

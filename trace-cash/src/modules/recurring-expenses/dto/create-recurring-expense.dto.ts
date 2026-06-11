@@ -3,10 +3,6 @@ import { Frequency } from '@prisma/client';
 
 export class CreateRecurringExpenseDto {
   @IsString()
-  @IsNotEmpty()
-  userId: string;
-
-  @IsString()
   @IsOptional()
   categoryId?: string;
 
@@ -40,7 +36,6 @@ export class CreateRecurringExpenseDto {
   endDate?: string;
 
   constructor(
-    userId: string,
     name: string,
     amount: number,
     frequency: Frequency,
@@ -50,7 +45,6 @@ export class CreateRecurringExpenseDto {
     dayOfMonth?: number,
     endDate?: string,
     ) {
-    this.userId = userId;
     this.categoryId = categoryId;
     this.name = name;
     this.amount = amount;

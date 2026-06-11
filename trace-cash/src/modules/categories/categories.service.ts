@@ -8,12 +8,17 @@ export class CategoriesService {
   //의존성 주입
   constructor(private prisma: PrismaService) {}
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return this.prisma.category.create({ data: createCategoryDto });
+  create(userId: string, createCategoryDto: CreateCategoryDto) {
+    return this.prisma.category.create({ data: {userId, ...createCategoryDto } });
   }
 
-  findAll() {
-    return this.prisma.category.findMany();
+  findAll(userId: string) {
+    return this.prisma.category.findMany(
+      {
+        where: { userId },
+      }
+
+    );
   }
 
   async findOne(id: string) {

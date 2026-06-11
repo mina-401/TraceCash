@@ -15,66 +15,49 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExpenseInstancesController = void 0;
 const common_1 = require("@nestjs/common");
 const expense_instances_service_1 = require("./expense-instances.service");
-const create_expense_instance_dto_1 = require("./dto/create-expense-instance.dto");
-const update_expense_instance_dto_1 = require("./dto/update-expense-instance.dto");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const current_user_decorator_1 = require("../../common/decorators/current-user.decorator");
 let ExpenseInstancesController = class ExpenseInstancesController {
-    expenseInstancesService;
-    constructor(expenseInstancesService) {
-        this.expenseInstancesService = expenseInstancesService;
+    service;
+    constructor(service) {
+        this.service = service;
     }
-    create(createExpenseInstanceDto) {
-        return this.expenseInstancesService.create(createExpenseInstanceDto);
+    findByPeriod(user, from, to) {
+        return this.service.findByPeriod(user.userId, from, to);
     }
-    findAll() {
-        return this.expenseInstancesService.findAll();
+    markPaid(id) {
+        return this.service.markPaid(id);
     }
-    findOne(id) {
-        return this.expenseInstancesService.findOne(+id);
-    }
-    update(id, updateExpenseInstanceDto) {
-        return this.expenseInstancesService.update(+id, updateExpenseInstanceDto);
-    }
-    remove(id) {
-        return this.expenseInstancesService.remove(+id);
+    skip(id) {
+        return this.service.skip(id);
     }
 };
 exports.ExpenseInstancesController = ExpenseInstancesController;
 __decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_expense_instance_dto_1.CreateExpenseInstanceDto]),
-    __metadata("design:returntype", void 0)
-], ExpenseInstancesController.prototype, "create", null);
-__decorate([
     (0, common_1.Get)(),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Query)('from')),
+    __param(2, (0, common_1.Query)('to')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object, String, String]),
     __metadata("design:returntype", void 0)
-], ExpenseInstancesController.prototype, "findAll", null);
+], ExpenseInstancesController.prototype, "findByPeriod", null);
 __decorate([
-    (0, common_1.Get)(':id'),
+    (0, common_1.Patch)(':id/pay'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], ExpenseInstancesController.prototype, "findOne", null);
+], ExpenseInstancesController.prototype, "markPaid", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_expense_instance_dto_1.UpdateExpenseInstanceDto]),
-    __metadata("design:returntype", void 0)
-], ExpenseInstancesController.prototype, "update", null);
-__decorate([
-    (0, common_1.Delete)(':id'),
+    (0, common_1.Patch)(':id/skip'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], ExpenseInstancesController.prototype, "remove", null);
+], ExpenseInstancesController.prototype, "skip", null);
 exports.ExpenseInstancesController = ExpenseInstancesController = __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('expense-instances'),
     __metadata("design:paramtypes", [expense_instances_service_1.ExpenseInstancesService])
 ], ExpenseInstancesController);

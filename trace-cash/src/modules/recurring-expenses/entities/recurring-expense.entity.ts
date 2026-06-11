@@ -7,19 +7,24 @@ import { UpdateRecurringExpenseDto } from '../dto/update-recurring-expense.dto';
 export class RecurringExpensesService {
   constructor(private prisma: PrismaService) {}
 
-  create(dto: CreateRecurringExpenseDto) {
-    const { startDate, endDate, ...rest } = dto;
-    return this.prisma.recurringExpense.create({
-      data: {
-        ...rest,
-        startDate: new Date(startDate),
-        endDate: endDate ? new Date(endDate) : null,
-      },
-    });
-  }
+  create(userId: string, dto: CreateRecurringExpenseDto) {
+  const { startDate, endDate, ...rest } = dto;
+  return this.prisma.recurringExpense.create({
+    data: {
+      ...rest,
+      userId,                  // ← 이 줄 추가!
+      startDate: new Date(startDate),
+      endDate: endDate ? new Date(endDate) : null,
+    },
+  });
+}
 
-  findAll() {
-    return this.prisma.recurringExpense.findMany();
+  findAll(userId: string) {
+    return this.prisma.recurringExpense.findMany({
+      where: {
+        userId
+      }
+    });
   }
 
   async findOne(id: string) {

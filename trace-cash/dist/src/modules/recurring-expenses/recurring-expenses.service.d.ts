@@ -4,7 +4,7 @@ import { UpdateRecurringExpenseDto } from './dto/update-recurring-expense.dto';
 export declare class RecurringExpensesService {
     private prisma;
     constructor(prisma: PrismaService);
-    create(dto: CreateRecurringExpenseDto): import("@prisma/client").Prisma.Prisma__RecurringExpenseClient<{
+    create(userId: string, dto: CreateRecurringExpenseDto): import("@prisma/client").Prisma.Prisma__RecurringExpenseClient<{
         userId: string;
         name: string;
         id: string;
@@ -18,7 +18,7 @@ export declare class RecurringExpensesService {
         endDate: Date | null;
         isActive: boolean;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    findAll(): import("@prisma/client").Prisma.PrismaPromise<{
+    findAll(userId: string): import("@prisma/client").Prisma.PrismaPromise<{
         userId: string;
         name: string;
         id: string;
